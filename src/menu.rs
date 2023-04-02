@@ -36,11 +36,14 @@ fn setup_menu(
     button_colors: Res<ButtonColors>,
 ) {
     commands.spawn(Camera2dBundle::default());
-    commands.spawn(TextBundle::from_section("Can you run a hospital? Watch out, every action you take might have a... sid effect.", TextStyle {
-        font: font_assets.fira_sans.clone(),
-        font_size: 40.0,
-        color: Color::rgb(0.9, 0.9, 0.9),
-    }));
+    commands.spawn(TextBundle::from_section(
+        "Can you run a hospital? Watch out, every action you take might have a... sid effect.",
+        TextStyle {
+            font: font_assets.fira_sans.clone(),
+            font_size: 40.0,
+            color: Color::rgb(0.9, 0.9, 0.9),
+        },
+    ));
     commands
         .spawn(ButtonBundle {
             style: Style {
