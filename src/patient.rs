@@ -1,11 +1,11 @@
 use crate::actions::Actions;
 use crate::loading::TextureAssets;
 use crate::GameState;
-use bevy::prelude::*;
-use bevy_rapier2d::prelude::*;
 use bevy::input::mouse::MouseButtonInput;
+use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy::window::Window;
+use bevy_rapier2d::prelude::*;
 
 pub struct PatientPlugin;
 
@@ -38,7 +38,7 @@ fn handle_mouse(
             ButtonState::Released => {
                 println!("Mouse button release: {:?}", ev.button);
                 if let Some(position) = window.cursor_position() {
-                    println!("Mouse released @ {:?}", position);    
+                    println!("Mouse released @ {:?}", position);
                 }
             }
         }
@@ -52,7 +52,11 @@ fn spawn_patient(mut commands: Commands, textures: Res<TextureAssets>) {
 
     commands
         .spawn(SpriteBundle {
-            texture: textures.folder.get("textures/patient_0.png").unwrap().clone(),
+            texture: textures
+                .folder
+                .get("textures/patient_0.png")
+                .unwrap()
+                .clone(),
             transform: Transform::from_translation(Vec3::new(1., 400., 1.)),
             ..Default::default()
         })
@@ -74,5 +78,4 @@ fn move_patient(
     mut ext_forces: Query<&mut ExternalForce>,
     mut ext_impulses: Query<&mut ExternalImpulse>,
 ) {
-    
 }

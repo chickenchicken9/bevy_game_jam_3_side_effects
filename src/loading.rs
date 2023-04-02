@@ -1,8 +1,8 @@
 use crate::GameState;
 use bevy::prelude::*;
+use bevy::utils::HashMap;
 use bevy_asset_loader::prelude::*;
 use bevy_kira_audio::AudioSource;
-use bevy::utils::HashMap;
 
 pub struct LoadingPlugin;
 
@@ -37,16 +37,19 @@ pub struct AudioAssets {
 
 #[derive(AssetCollection, Resource)]
 pub struct TextureAssets {
-    #[asset(paths(
-        "textures/hospital.png", 
-        "textures/patient_0.png",
-        "textures/patient_1.png",
-        "textures/patient_2.png",
-        "textures/patient_3.png",
-        "textures/pill_0.png",
-        "textures/pill_1.png",
-        "textures/pill_2.png",
-        "textures/pill_3.png",
-    ), collection(typed, mapped))]
+    #[asset(
+        paths(
+            "textures/hospital.png",
+            "textures/patient_0.png",
+            "textures/patient_1.png",
+            "textures/patient_2.png",
+            "textures/patient_3.png",
+            "textures/pill_0.png",
+            "textures/pill_1.png",
+            "textures/pill_2.png",
+            "textures/pill_3.png",
+        ),
+        collection(typed, mapped)
+    )]
     pub folder: HashMap<String, Handle<Image>>,
 }

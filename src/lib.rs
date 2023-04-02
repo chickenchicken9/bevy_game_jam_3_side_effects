@@ -48,7 +48,7 @@ impl Plugin for GamePlugin {
             .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
             .add_plugin(RapierDebugRenderPlugin::default())
             .add_startup_system(setup_physics);
-            // .add_system(print_ball_altitude);
+        // .add_system(print_ball_altitude);
 
         #[cfg(debug_assertions)]
         {
