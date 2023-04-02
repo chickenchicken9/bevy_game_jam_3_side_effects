@@ -87,7 +87,7 @@ jobs:
       - name: Upload binaries to artifacts
         uses: actions/upload-artifact@v3
         with:
-          path: ${{ env.binary }}.dmg
+          path:  ${{ env.GAME_EXECUTABLE_NAME }}.dmg
           name: mac
 
   build-linux:
@@ -127,7 +127,7 @@ jobs:
       - name: Upload binaries to artifacts
         uses: actions/upload-artifact@v3
         with:
-          path: ${{ env.GAME_EXECUTABLE_NAME }}_${{ env.VERSION }}_linux.tar.gz
+          path: ${{ env.GAME_EXECUTABLE_NAME }}_linux.tar.gz
           name: linux_tar
 
   build-windows:
@@ -180,12 +180,12 @@ jobs:
       - name: Upload zip to artifacts
         uses: actions/upload-artifact@v3
         with:
-          path: ${{ env.GAME_EXECUTABLE_NAME }}_${{ env.VERSION }}_windows.zip
+          path: ${{ env.GAME_EXECUTABLE_NAME }}_windows.zip
           name: windows_zip
       - name: Upload msi to artifacts
         uses: actions/upload-artifact@v3
         with:
-          path: ${{ env.GAME_EXECUTABLE_NAME }}_${{ steps.tag.outputs.tag }}_windows.msi
+          path: installer/en-US/installer.msi
           name: windows_msi
 
   build-web:
@@ -239,7 +239,7 @@ jobs:
       - name: Upload binaries to artifacts
         uses: actions/upload-artifact@v3
         with:
-          path: ${{ env.GAME_EXECUTABLE_NAME }}_${{ env.VERSION }}_web.zip
+          path: ${{ env.GAME_EXECUTABLE_NAME }}_web.zip
           name: wasm
 
   check-if-upload-to-itch-is-configured:
