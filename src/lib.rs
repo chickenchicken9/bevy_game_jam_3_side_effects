@@ -3,6 +3,7 @@ mod audio;
 mod loading;
 mod menu;
 mod patient;
+mod pill;
 mod player;
 
 use crate::actions::ActionsPlugin;
@@ -10,8 +11,11 @@ use crate::audio::InternalAudioPlugin;
 use crate::loading::LoadingPlugin;
 use crate::menu::MenuPlugin;
 use crate::patient::PatientPlugin;
+use crate::pill::PillPlugin;
 use crate::player::PlayerPlugin;
 use bevy::prelude::*;
+use bevy::window::PrimaryWindow;
+use bevy::window::Window;
 use bevy_rapier2d::prelude::*;
 
 use bevy::app::App;
@@ -44,6 +48,7 @@ impl Plugin for GamePlugin {
             .add_plugin(InternalAudioPlugin)
             .add_plugin(PlayerPlugin)
             .add_plugin(PatientPlugin)
+            .add_plugin(PillPlugin)
             // .add_plugins(DefaultPlugins)
             .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
             .add_plugin(RapierDebugRenderPlugin::default())
@@ -58,11 +63,34 @@ impl Plugin for GamePlugin {
     }
 }
 
-fn setup_physics(mut commands: Commands) {
-    /* Create the ground. */
+fn setup_physics(mut commands: Commands, window_q: Query<&Window, With<PrimaryWindow>>) {
+    let window = window_q.single();
+    // floor
     commands
-        .spawn(Collider::cuboid(500.0, 50.0))
-        .insert(TransformBundle::from(Transform::from_xyz(0.0, -100.0, 0.0)));
+        .spawn(Collider::cuboid(500.0, 10.0))
+        .insert(TransformBundle::from(Transform::from_xyz(
+            0.0,
+            -(window.resolution.height() / 2.),
+            0.0,
+        )));
+
+    // left wall
+    commands
+        .spawn(Collider::cuboid(10.0, 500.0))
+        .insert(TransformBundle::from(Transform::from_xyz(
+            -(window.resolution.width() / 2.),
+            0.,
+            0.0,
+        )));
+
+    // right wall
+    commands
+        .spawn(Collider::cuboid(10.0, 500.0))
+        .insert(TransformBundle::from(Transform::from_xyz(
+            window.resolution.width() / 2.,
+            0.,
+            0.0,
+        )));
 
     /* Create the bouncing ball. */
     commands
