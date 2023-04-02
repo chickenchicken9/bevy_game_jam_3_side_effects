@@ -1,18 +1,14 @@
-mod actions;
 mod audio;
 mod loading;
 mod menu;
 mod patient;
 mod pill;
-mod player;
 
-use crate::actions::ActionsPlugin;
 use crate::audio::InternalAudioPlugin;
 use crate::loading::LoadingPlugin;
 use crate::menu::MenuPlugin;
 use crate::patient::PatientPlugin;
 use crate::pill::PillPlugin;
-use crate::player::PlayerPlugin;
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy::window::Window;
@@ -44,9 +40,7 @@ impl Plugin for GamePlugin {
         app.add_state::<GameState>()
             .add_plugin(LoadingPlugin)
             .add_plugin(MenuPlugin)
-            .add_plugin(ActionsPlugin)
             .add_plugin(InternalAudioPlugin)
-            .add_plugin(PlayerPlugin)
             .add_plugin(PatientPlugin)
             .add_plugin(PillPlugin)
             // .add_plugins(DefaultPlugins)

@@ -1,4 +1,3 @@
-use crate::actions::Actions;
 use crate::loading::TextureAssets;
 use crate::GameState;
 use bevy::input::mouse::MouseButtonInput;
@@ -15,7 +14,7 @@ pub struct PillPlugin;
 #[derive(Component)]
 pub struct Pill;
 
-struct SpawnPillEvent(Vec2);
+pub struct SpawnPillEvent(Vec2);
 
 impl Plugin for PillPlugin {
     fn build(&self, app: &mut App) {
@@ -61,7 +60,7 @@ fn handle_mouse(
     }
 }
 
-fn spawn_pills(
+pub fn spawn_pills(
     mut commands: Commands,
     textures: Res<TextureAssets>,
     mut ev_spawn_pill: EventReader<SpawnPillEvent>,
@@ -113,7 +112,6 @@ fn spawn_pills(
 
 fn move_pill(
     time: Res<Time>,
-    actions: Res<Actions>,
     mut pill_query: Query<&mut Transform, With<Pill>>,
     mut ext_forces: Query<&mut ExternalForce>,
     mut ext_impulses: Query<&mut ExternalImpulse>,

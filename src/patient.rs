@@ -1,4 +1,3 @@
-use crate::actions::Actions;
 use crate::loading::TextureAssets;
 use crate::GameState;
 use bevy::input::mouse::MouseButtonInput;
@@ -73,7 +72,6 @@ fn spawn_patient(mut commands: Commands, textures: Res<TextureAssets>) {
 
 fn move_patient(
     time: Res<Time>,
-    actions: Res<Actions>,
     mut patient_query: Query<&mut Transform, With<Patient>>,
     mut ext_forces: Query<&mut ExternalForce>,
     mut ext_impulses: Query<&mut ExternalImpulse>,
