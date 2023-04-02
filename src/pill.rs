@@ -60,6 +60,8 @@ fn handle_mouse(
     }
 }
 
+const pill_scale: f32 = 0.1;
+
 pub fn spawn_pills(
     mut commands: Commands,
     textures: Res<TextureAssets>,
@@ -83,8 +85,8 @@ pub fn spawn_pills(
             ));
         }
 
-        let force_scale = 3000.;
-        let torque_scale = 20.;
+        let force_scale = 30.;
+        let torque_scale = 0.05;
 
         let x_force_sample: f32 = Standard.sample(&mut rng);
         let y_force_sample: f32 = Standard.sample(&mut rng);
@@ -98,18 +100,18 @@ pub fn spawn_pills(
             .spawn(SpriteBundle {
                 texture: text.clone(),
                 transform: Transform::from_translation(Vec3::new(ev.0.x, ev.0.y, 1.))
-                    .with_scale(Vec3::new(0.5, 0.5, 1.)),
+                    .with_scale(Vec3::new(pill_scale, pill_scale, 1.)),
                 ..Default::default()
             })
             .insert(Pill)
             .insert(RigidBody::Dynamic)
             // .insert(Collider::ball(60.0))
             .insert(Collider::convex_hull(&points).unwrap())
-            .insert(ColliderMassProperties::Density(1.))
+            .insert(ColliderMassProperties::Density(50.))
             .insert(Restitution::coefficient(0.9))
-            .insert(ExternalForce {
-                force: Vec2::new(x_force, y_force),
-                torque: torque_force,
+            .insert(ExternalImpulse {
+                impulse: Vec2::new(x_force, y_force),
+                torque_impulse: torque_force,
             });
     }
 }
@@ -120,8 +122,8 @@ fn move_pill(
     mut ext_forces: Query<&mut ExternalForce>,
     mut ext_impulses: Query<&mut ExternalImpulse>,
 ) {
-    for mut ext_force in ext_forces.iter_mut() {
-        ext_force.force = Vec2::new(0., 0.0);
-        ext_force.torque = 0.0;
-    }
+    // for mut ext_force in ext_forces.iter_mut() {
+    //     ext_force.force = Vec2::new(0., 0.0);
+    //     ext_force.torque = 0.0;
+    // }
 }
