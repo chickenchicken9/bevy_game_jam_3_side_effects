@@ -1,6 +1,6 @@
 # We Have Hospital at Home
 
-For Bevy Game Jam #3 (theme: Side Effects).
+For Bevy Game Jam #3 (theme: Side Effects): https://itch.io/jam/bevy-jam-3.
 
  - Generated from https://github.com/NiklasEi/bevy_game_template
  - Uses itch.io push from https://github.com/bevyengine/bevy_github_ci_template
