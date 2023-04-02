@@ -27,8 +27,10 @@ fn handle_mouse(
     mut mousebtn_evr: EventReader<MouseButtonInput>,
     primary_window: Query<&Window, With<PrimaryWindow>>,
     mut ev_spawn_pill: EventWriter<SpawnPillEvent>,
+    camera_q: Query<(&Camera, &GlobalTransform)>,
 ) {
     let window = primary_window.single();
+    let (camera, camera_transform) = camera_q.single();
 
     use bevy::input::ButtonState;
 
@@ -41,7 +43,15 @@ fn handle_mouse(
                 println!("Mouse button release: {:?}", ev.button);
                 if let Some(pos) = window.cursor_position() {
                     println!("Mouse released @ {:?}", pos);
-                    ev_spawn_pill.send(SpawnPillEvent(pos));
+
+                    if let Some(world_position) = window
+                        .cursor_position()
+                        .and_then(|cursor| camera.viewport_to_world(camera_transform, cursor))
+                        .map(|ray| ray.origin.truncate())
+                    {
+                        eprintln!("World coords: {}/{}", world_position.x, world_position.y);
+                        ev_spawn_pill.send(SpawnPillEvent(world_position));
+                    }
                 }
             }
         }
@@ -57,7 +67,7 @@ fn spawn_pills(
         commands
             .spawn(SpriteBundle {
                 texture: textures.folder.get("textures/pill_0.png").unwrap().clone(),
-                transform: Transform::from_translation(Vec3::ZERO),
+                transform: Transform::from_translation(Vec3::new(ev.0.x, ev.0.y, 1.)),
                 ..Default::default()
             })
             .insert(Pill)
