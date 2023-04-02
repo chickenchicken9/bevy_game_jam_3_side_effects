@@ -71,6 +71,7 @@ fn spawn_patient(
     time: Res<Time>,
     mut config: ResMut<PatientSpawnConfig>,
     assets: Res<Assets<Image>>,
+    primary_window: Query<&Window, With<PrimaryWindow>>,
 ) {
     // tick the timer
     config.timer.tick(time.delta());
@@ -79,6 +80,7 @@ fn spawn_patient(
         return;
     }
 
+    let window = primary_window.single();
     let mut rng = StdRng::from_entropy();
     let text_path = format!("textures/patient_{}.png", rng.next_u32() % 4);
     let text = textures.folder.get(&text_path).unwrap();
@@ -106,14 +108,18 @@ fn spawn_patient(
     let y_force = y_force_sample * force_scale - force_scale / 2.;
     let torque_force = torque_sample * torque_scale - torque_scale / 2.;
 
+    let x_pos_sample: f32 = Standard.sample(&mut rng);
+    let y_pos_sample: f32 = Standard.sample(&mut rng);
+
     commands
         .spawn(SpriteBundle {
             texture: text.clone(),
-            transform: Transform::from_translation(Vec3::new(1., 400., 1.)).with_scale(Vec3::new(
-                patient_scale,
-                patient_scale,
+            transform: Transform::from_translation(Vec3::new(
+                (x_pos_sample - 0.5) * window.width(),
+                (y_pos_sample - 0.5) * window.height(),
                 1.,
-            )),
+            ))
+            .with_scale(Vec3::new(patient_scale, patient_scale, 1.)),
             ..Default::default()
         })
         .insert(Patient)
