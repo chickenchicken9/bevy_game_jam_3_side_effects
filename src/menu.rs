@@ -37,13 +37,23 @@ fn setup_menu(
 ) {
     commands.spawn(Camera2dBundle::default());
     commands.spawn(TextBundle::from_section(
-        "Can you run a hospital? Watch out, every action you take might have a... sid effect.",
+        "Can you run a hospital?\nWatch out, every action you take\nmight have a... side effect.",
         TextStyle {
             font: font_assets.fira_sans.clone(),
-            font_size: 40.0,
+            font_size: 30.0,
             color: Color::rgb(0.9, 0.9, 0.9),
-        },
-    ));
+        })
+        .with_text_alignment(TextAlignment::Right)
+        .with_style(Style {
+            position_type: PositionType::Absolute,
+            position: UiRect {
+                top: Val::Px(15.0),
+                right: Val::Px(25.0),
+                ..default()
+            },
+            ..default()
+        })
+    );
     commands
         .spawn(ButtonBundle {
             style: Style {
