@@ -84,6 +84,11 @@ jobs:
           asset_name: ${{ env.GAME_EXECUTABLE_NAME }}_${{ env.VERSION }}_macOS.dmg
           release_name: ${{ env.VERSION }}
           overwrite: true
+      - name: Upload binaries to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: ${{ env.binary }}.dmg
+          name: mac
 
   build-linux:
     runs-on: ubuntu-latest
@@ -119,6 +124,11 @@ jobs:
           asset_name: ${{ env.GAME_EXECUTABLE_NAME }}_${{ env.VERSION }}_linux.tar.gz
           release_name: ${{ env.VERSION }}
           overwrite: true
+      - name: Upload binaries to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: ${{ env.GAME_EXECUTABLE_NAME }}_${{ env.VERSION }}_linux.tar.gz
+          name: linux_tar
 
   build-windows:
     runs-on: windows-latest
@@ -167,6 +177,16 @@ jobs:
          asset_name: ${{ env.GAME_EXECUTABLE_NAME }}_${{ steps.tag.outputs.tag }}_windows.msi
          release_name: ${{ env.VERSION }}
          overwrite: true
+      - name: Upload zip to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: ${{ env.GAME_EXECUTABLE_NAME }}_${{ env.VERSION }}_windows.zip
+          name: windows_zip
+      - name: Upload msi to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: ${{ env.GAME_EXECUTABLE_NAME }}_${{ steps.tag.outputs.tag }}_windows.msi
+          name: windows_msi
 
   build-web:
     runs-on: ubuntu-latest
@@ -216,6 +236,11 @@ jobs:
           asset_name: ${{ env.GAME_EXECUTABLE_NAME }}_${{ env.VERSION }}_web.zip
           release_name: ${{ env.VERSION }}
           overwrite: true
+      - name: Upload binaries to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: ${{ env.GAME_EXECUTABLE_NAME }}_${{ env.VERSION }}_web.zip
+          name: wasm
 
   check-if-upload-to-itch-is-configured:
     runs-on: ubuntu-latest
