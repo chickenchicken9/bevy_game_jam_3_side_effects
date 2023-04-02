@@ -5,6 +5,10 @@ use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy::window::Window;
 use bevy_rapier2d::prelude::*;
+use std::time::Duration;
+
+use rand::RngCore;
+use rand::{rngs::StdRng, SeedableRng};
 
 pub struct PatientPlugin;
 
@@ -15,7 +19,8 @@ pub struct Patient;
 /// Patient logic is only active during the State `GameState::Playing`
 impl Plugin for PatientPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(spawn_patient.in_schedule(OnEnter(GameState::Playing)))
+        app.add_system(setup_patient_spawning.in_schedule(OnEnter(GameState::Playing)))
+            .add_system(spawn_patient.in_set(OnUpdate(GameState::Playing)))
             .add_system(move_patient.in_set(OnUpdate(GameState::Playing)))
             .add_system(handle_mouse.in_set(OnUpdate(GameState::Playing)));
     }
@@ -44,18 +49,40 @@ fn handle_mouse(
     }
 }
 
-fn spawn_patient(mut commands: Commands, textures: Res<TextureAssets>) {
-    for key in textures.folder.keys() {
-        println!("found text: {}", key);
+#[derive(Resource)]
+struct PatientSpawnConfig {
+    /// How often to spawn a new patient? (repeating timer)
+    timer: Timer,
+}
+
+/// Configure our patient spawning algorithm
+fn setup_patient_spawning(mut commands: Commands) {
+    commands.insert_resource(PatientSpawnConfig {
+        // create the repeating timer
+        timer: Timer::new(Duration::from_secs(1), TimerMode::Repeating),
+    })
+}
+
+fn spawn_patient(
+    mut commands: Commands,
+    textures: Res<TextureAssets>,
+    time: Res<Time>,
+    mut config: ResMut<PatientSpawnConfig>,
+) {
+    // tick the timer
+    config.timer.tick(time.delta());
+
+    if !config.timer.finished() {
+        return;
     }
+
+    let mut rng = StdRng::from_entropy();
+    let text_path = format!("textures/patient_{}.png", rng.next_u32() % 4);
+    let text = textures.folder.get(&text_path).unwrap();
 
     commands
         .spawn(SpriteBundle {
-            texture: textures
-                .folder
-                .get("textures/patient_0.png")
-                .unwrap()
-                .clone(),
+            texture: text.clone(),
             transform: Transform::from_translation(Vec3::new(1., 400., 1.)),
             ..Default::default()
         })

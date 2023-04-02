@@ -7,8 +7,8 @@ use bevy::window::PrimaryWindow;
 use bevy::window::Window;
 use bevy_rapier2d::prelude::*;
 use rand::distributions::{Distribution, Standard};
+use rand::RngCore;
 use rand::{rngs::StdRng, SeedableRng};
-
 pub struct PillPlugin;
 
 #[derive(Component)]
@@ -64,18 +64,22 @@ pub fn spawn_pills(
     mut commands: Commands,
     textures: Res<TextureAssets>,
     mut ev_spawn_pill: EventReader<SpawnPillEvent>,
+    assets: Res<Assets<Image>>,
 ) {
     let mut rng = StdRng::from_entropy();
+    let text_path = format!("textures/pill_{}.png", rng.next_u32() % 4);
+    let text = textures.folder.get(&text_path).unwrap();
+    let img = assets.get(text).unwrap();
+
     for ev in ev_spawn_pill.iter() {
         let mut points = Vec::new();
 
-        let (x_scale, y_scale) = (150., 300.);
         for _ in 0..10 {
             let x: f32 = Standard.sample(&mut rng);
             let y: f32 = Standard.sample(&mut rng);
             points.push(Vect::new(
-                x * x_scale - x_scale / 2.,
-                y * y_scale - y_scale / 2.,
+                x * img.size().x - img.size().x / 2.,
+                y * img.size().y - img.size().y / 2.,
             ));
         }
 
@@ -92,7 +96,7 @@ pub fn spawn_pills(
 
         commands
             .spawn(SpriteBundle {
-                texture: textures.folder.get("textures/pill_0.png").unwrap().clone(),
+                texture: text.clone(),
                 transform: Transform::from_translation(Vec3::new(ev.0.x, ev.0.y, 1.))
                     .with_scale(Vec3::new(0.5, 0.5, 1.)),
                 ..Default::default()
