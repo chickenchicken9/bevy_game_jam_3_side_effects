@@ -22,6 +22,7 @@ fn main() {
             }),
             ..default()
         }))
+        .add_system(bevy::window::close_on_esc)
         .add_plugin(GamePlugin)
         .add_system(set_window_icon.on_startup())
         .run();

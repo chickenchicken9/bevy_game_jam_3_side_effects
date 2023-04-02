@@ -18,9 +18,10 @@ impl Plugin for PlayerPlugin {
 }
 
 fn spawn_player(mut commands: Commands, textures: Res<TextureAssets>) {
+    
     commands
         .spawn(SpriteBundle {
-            texture: textures.texture_hospital.clone(),
+            texture: textures.folder.get("textures/patient_1.png").unwrap().clone(),
             transform: Transform::from_translation(Vec3::new(0., 0., 1.)),
             ..Default::default()
         })
