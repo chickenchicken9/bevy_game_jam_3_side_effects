@@ -1,7 +1,7 @@
 use crate::loading::FontAssets;
+use crate::loading::TextureAssets;
 use crate::GameState;
 use bevy::prelude::*;
-
 pub struct MenuPlugin;
 
 /// This plugin is responsible for the game menu (containing only one button...)
@@ -30,13 +30,18 @@ impl Default for ButtonColors {
     }
 }
 
+#[derive(Component)]
+struct MenuEntity;
+
 fn setup_menu(
     mut commands: Commands,
     font_assets: Res<FontAssets>,
     button_colors: Res<ButtonColors>,
+    textures: Res<TextureAssets>,
 ) {
     commands.spawn(Camera2dBundle::default());
-    commands.spawn(TextBundle::from_section(
+    commands.spawn(MenuEntity)
+    .insert(TextBundle::from_section(
         "Can you run a hospital?\nWatch out, every action you take\nmight have a... side effect.",
         TextStyle {
             font: font_assets.fira_sans.clone(),
@@ -54,8 +59,20 @@ fn setup_menu(
             ..default()
         })
     );
+    commands.spawn(MenuEntity).insert(ImageBundle {
+        image: UiImage {
+            texture: textures
+                .folder
+                .get("textures/hospital.png")
+                .unwrap()
+                .clone(),
+            ..default()
+        },
+        ..default()
+    });
     commands
-        .spawn(ButtonBundle {
+        .spawn(MenuEntity)
+        .insert(ButtonBundle {
             style: Style {
                 size: Size::new(Val::Px(120.0), Val::Px(50.0)),
                 margin: UiRect::all(Val::Auto),
@@ -101,6 +118,8 @@ fn click_play_button(
     }
 }
 
-fn cleanup_menu(mut commands: Commands, button: Query<Entity, With<Button>>) {
-    commands.entity(button.single()).despawn_recursive();
+fn cleanup_menu(mut commands: Commands, menu_entities: Query<Entity, With<MenuEntity>>) {
+    for e in menu_entities.iter() {
+        commands.entity(e).despawn_recursive();
+    }
 }
