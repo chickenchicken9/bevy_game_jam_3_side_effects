@@ -10,6 +10,7 @@ use rand::distributions::{Distribution, Standard};
 use rand::RngCore;
 use rand::{rngs::StdRng, SeedableRng};
 pub struct PillPlugin;
+use bevy_rapier2d::geometry::ActiveEvents;
 
 #[derive(Component)]
 pub struct Pill;
@@ -92,7 +93,7 @@ pub fn spawn_pills(
         let torque_scale = 0.05;
         let torque_sample: f32 = Standard.sample(&mut rng);
         let torque_impulse = torque_sample * torque_scale - torque_scale / 2.;
-        
+
         let force_scale = 300.;
         // random forces
         /*
@@ -107,7 +108,7 @@ pub fn spawn_pills(
         // force based on beaker rotation
         let impulse: Vec2 = ev.dir.mul_vec3(Vec3::new(0., 1., 0.)).truncate() * force_scale;
 
-        println!("ev.dir: {:?}, impulse: {:?}", ev.dir, impulse);
+        // println!("ev.dir: {:?}, impulse: {:?}", ev.dir, impulse);
 
         commands
             .spawn(SpriteBundle {
@@ -122,6 +123,7 @@ pub fn spawn_pills(
             .insert(Collider::convex_hull(&points).unwrap())
             .insert(ColliderMassProperties::Density(50.))
             .insert(Restitution::coefficient(0.9))
+            .insert(ActiveEvents::COLLISION_EVENTS)
             .insert(ExternalImpulse {
                 impulse,
                 torque_impulse,

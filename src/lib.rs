@@ -4,6 +4,7 @@ mod loading;
 mod menu;
 mod patient;
 mod pill;
+mod ui;
 
 use crate::audio::InternalAudioPlugin;
 use crate::beaker::BeakerPlugin;
@@ -11,6 +12,7 @@ use crate::loading::LoadingPlugin;
 use crate::menu::MenuPlugin;
 use crate::patient::PatientPlugin;
 use crate::pill::PillPlugin;
+use crate::ui::UiPlugin;
 
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
@@ -47,6 +49,7 @@ impl Plugin for GamePlugin {
             .add_plugin(PatientPlugin)
             .add_plugin(PillPlugin)
             .add_plugin(BeakerPlugin)
+            .add_plugin(UiPlugin)
             // .add_plugins(DefaultPlugins)
             .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
             .add_startup_system(setup_physics);

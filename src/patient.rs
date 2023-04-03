@@ -7,11 +7,15 @@ use bevy::window::Window;
 use bevy_rapier2d::prelude::*;
 use std::time::Duration;
 
+use crate::pill::Pill;
+use bevy_rapier2d::geometry::ActiveEvents;
+use bevy_rapier2d::pipeline::CollisionEvent;
 use rand::distributions::{Distribution, Standard};
 use rand::RngCore;
 use rand::{rngs::StdRng, SeedableRng};
 
 pub struct PatientPlugin;
+pub struct PatientHealedEvent;
 
 #[derive(Component)]
 pub struct Patient;
@@ -22,7 +26,9 @@ impl Plugin for PatientPlugin {
     fn build(&self, app: &mut App) {
         app.add_system(setup_patient_spawning.in_schedule(OnEnter(GameState::Playing)))
             .add_system(spawn_patient.in_set(OnUpdate(GameState::Playing)))
-            .add_system(move_patient.in_set(OnUpdate(GameState::Playing)));
+            .add_system(handle_collisions.in_set(OnUpdate(GameState::Playing)))
+            .add_system(move_patient.in_set(OnUpdate(GameState::Playing)))
+            .add_event::<PatientHealedEvent>();
     }
 }
 
@@ -103,10 +109,42 @@ fn spawn_patient(
         .insert(Collider::convex_hull(&points).unwrap())
         .insert(ColliderMassProperties::Density(2.0))
         .insert(Restitution::coefficient(0.7))
+        .insert(ActiveEvents::COLLISION_EVENTS)
         .insert(ExternalImpulse {
             impulse: Vec2::new(x_force, y_force),
             torque_impulse: torque_force,
         });
+}
+
+fn handle_collisions(
+    mut collision_events: EventReader<CollisionEvent>,
+    mut patients: Query<&Patient>,
+    mut pills: Query<&Pill>,
+    mut commands: Commands,
+    mut ev_heal_pt: EventWriter<PatientHealedEvent>,
+) {
+    for ev in collision_events.iter() {
+        match ev {
+            CollisionEvent::Started(e1, e2, flags) => {
+                if let Ok(pill) = pills.get(*e1) {
+                    if let Ok(patient) = patients.get(*e2) {
+                        commands.entity(*e1).despawn_recursive();
+                        commands.entity(*e2).despawn_recursive();
+                        ev_heal_pt.send(PatientHealedEvent);
+                    }
+                }
+                
+                if let Ok(pill) = pills.get(*e2) {
+                    if let Ok(patient) = patients.get(*e1) {
+                        commands.entity(*e1).despawn_recursive();
+                        commands.entity(*e2).despawn_recursive();
+                        ev_heal_pt.send(PatientHealedEvent);
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
 }
 
 fn move_patient(

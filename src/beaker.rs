@@ -3,13 +3,13 @@ use crate::GameState;
 use bevy::input::mouse::MouseButtonInput;
 use bevy::math::cubic_splines::Point;
 use bevy::prelude::*;
+use bevy::sprite::MaterialMesh2dBundle;
 use bevy::window::PrimaryWindow;
 use bevy::window::Window;
 use bevy_rapier2d::prelude::*;
 use rand::distributions::{Distribution, Standard};
 use rand::RngCore;
 use rand::{rngs::StdRng, SeedableRng};
-use bevy::sprite::MaterialMesh2dBundle;
 
 use crate::pill::SpawnPillEvent;
 
@@ -69,7 +69,9 @@ fn spawn_beakers(
             })
             .with_children(|parent| {
                 parent.spawn(MaterialMesh2dBundle {
-                    mesh: meshes.add(shape::Circle::new(beaker_click_dist / beaker_scale).into()).into(),
+                    mesh: meshes
+                        .add(shape::Circle::new(beaker_click_dist / beaker_scale).into())
+                        .into(),
                     material: materials.add(ColorMaterial::from(Color::PURPLE)),
                     // transform: Transform::from_xyz(0.0, 0.0, 0.0),
                     ..default()
@@ -131,7 +133,7 @@ fn handle_beaker_touch(
                     for b in beakers.iter() {
                         if b.translation().truncate().distance(world_position) < beaker_click_dist {
                             let (scale, dir, pos) = b.to_scale_rotation_translation();
-                            ev_spawn_pill.send(SpawnPillEvent {pos, dir});
+                            ev_spawn_pill.send(SpawnPillEvent { pos, dir });
                         }
                     }
                 }
