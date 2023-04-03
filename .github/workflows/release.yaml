@@ -17,7 +17,7 @@ env:
   #   if you use special characters, take a look at the 'Make paths relative' step in the 'build-web' job
   GAME_EXECUTABLE_NAME: hospital_at_home
   GAME_OSX_APP_NAME: HospitalAtHome
-  itch_target: itch.chickenchicken9/we-have-hospital-at-home
+  itch_target: chickenchicken9/we-have-hospital-at-home
 
 permissions:
   contents: write
