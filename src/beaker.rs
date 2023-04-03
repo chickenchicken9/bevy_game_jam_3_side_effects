@@ -140,7 +140,11 @@ fn handle_clicks_and_touches(
             bevy::input::touch::TouchPhase::Started => {
                 // ev_taps.send(TapEvent(touch.position));
                 info!("Tap @ {:?}", touch.position);
-                info!("Window pos: {:?}, size: {:?}", window.position, (window.width(), window.height()));
+                info!(
+                    "Window pos: {:?}, size: {:?}",
+                    window.position,
+                    (window.width(), window.height())
+                );
 
                 // do touches have to be translated into world position like mouse clicks?
 
