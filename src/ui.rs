@@ -1,7 +1,7 @@
 use crate::loading::FontAssets;
 use crate::loading::TextureAssets;
-use crate::GameState;
 use crate::patient::PatientHealedEvent;
+use crate::GameState;
 use bevy::prelude::*;
 
 pub struct UiPlugin;
@@ -21,31 +21,30 @@ struct PatientTracker {
     saved: i32,
 }
 
-fn setup_ui(
-    mut commands: Commands,
-    font_assets: Res<FontAssets>,
-) {
+fn setup_ui(mut commands: Commands, font_assets: Res<FontAssets>) {
     commands
         .spawn(UiEntity)
-        .insert(PatientTracker {saved: 0})
-        .insert(TextBundle::from_section(
-        "Patients saved: 0",
-        TextStyle {
-            font: font_assets.fira_sans.clone(),
-            font_size: 30.0,
-            color: Color::rgb(0.9, 0.9, 0.9),
-        })
-        .with_text_alignment(TextAlignment::Center)
-        .with_style(Style {
-            position_type: PositionType::Absolute,
-            position: UiRect {
-                top: Val::Px(15.0),
-                left: Val::Px(100.0),
+        .insert(PatientTracker { saved: 0 })
+        .insert(
+            TextBundle::from_section(
+                "Patients saved: 0",
+                TextStyle {
+                    font: font_assets.fira_sans.clone(),
+                    font_size: 30.0,
+                    color: Color::rgb(0.9, 0.9, 0.9),
+                },
+            )
+            .with_text_alignment(TextAlignment::Center)
+            .with_style(Style {
+                position_type: PositionType::Absolute,
+                position: UiRect {
+                    top: Val::Px(15.0),
+                    left: Val::Px(100.0),
+                    ..default()
+                },
                 ..default()
-            },
-            ..default()
-        })
-    );
+            }),
+        );
 }
 
 fn update_ui(
@@ -58,7 +57,7 @@ fn update_ui(
         tracker.saved += 1;
         changed = true;
     }
-    
+
     if changed {
         text.sections[0].value = format!("Patients saved: {}", tracker.saved);
     }

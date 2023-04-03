@@ -133,7 +133,7 @@ fn handle_collisions(
                         ev_heal_pt.send(PatientHealedEvent);
                     }
                 }
-                
+
                 if let Ok(pill) = pills.get(*e2) {
                     if let Ok(patient) = patients.get(*e1) {
                         commands.entity(*e1).despawn_recursive();
