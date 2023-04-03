@@ -45,10 +45,8 @@ fn setup_ui(mut commands: Commands, font_assets: Res<FontAssets>) {
                 ..default()
             }),
         );
-        
-    commands
-    .spawn(UiEntity)
-    .insert(
+
+    commands.spawn(UiEntity).insert(
         TextBundle::from_section(
             "Tap the beakers to pop out pills.\nSave the patients!",
             TextStyle {

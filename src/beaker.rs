@@ -2,6 +2,7 @@ use crate::loading::TextureAssets;
 use crate::GameState;
 use bevy::input::mouse::MouseButtonInput;
 
+use bevy::input::touch::TouchInput;
 use bevy::prelude::*;
 use bevy::sprite::MaterialMesh2dBundle;
 use bevy::window::PrimaryWindow;
@@ -14,11 +15,15 @@ pub struct Beaker;
 
 pub struct BeakerPlugin;
 
+struct TapEvent(Vec2);
+
 impl Plugin for BeakerPlugin {
     fn build(&self, app: &mut App) {
         app.add_system(spawn_beakers.in_schedule(OnEnter(GameState::Playing)))
-            .add_system(handle_beaker_touch.in_set(OnUpdate(GameState::Playing)))
-            .add_system(handle_beaker_hover.in_set(OnUpdate(GameState::Playing)));
+            .add_system(handle_taps.in_set(OnUpdate(GameState::Playing)))
+            .add_system(handle_clicks_and_touches.in_set(OnUpdate(GameState::Playing)))
+            .add_system(handle_beaker_hover.in_set(OnUpdate(GameState::Playing)))
+            .add_event::<TapEvent>();
     }
 }
 
@@ -101,12 +106,12 @@ fn handle_beaker_hover(
     }
 }
 
-fn handle_beaker_touch(
+fn handle_clicks_and_touches(
+    mut touch_evr: EventReader<TouchInput>,
     mut mousebtn_evr: EventReader<MouseButtonInput>,
     primary_window: Query<&Window, With<PrimaryWindow>>,
-    mut ev_spawn_pill: EventWriter<SpawnPillEvent>,
     camera_q: Query<(&Camera, &GlobalTransform)>,
-    beakers: Query<&GlobalTransform, With<Beaker>>,
+    mut ev_taps: EventWriter<TapEvent>,
 ) {
     let window = primary_window.single();
     let (camera, camera_transform) = camera_q.single();
@@ -124,13 +129,37 @@ fn handle_beaker_touch(
                     .and_then(|cursor| camera.viewport_to_world(camera_transform, cursor))
                     .map(|ray| ray.origin.truncate())
                 {
-                    for b in beakers.iter() {
-                        if b.translation().truncate().distance(world_position) < BEAKER_CLICK_DIST {
-                            let (_scale, dir, pos) = b.to_scale_rotation_translation();
-                            ev_spawn_pill.send(SpawnPillEvent { pos, dir });
-                        }
-                    }
+                    ev_taps.send(TapEvent(world_position));
                 }
+            }
+        }
+    }
+
+    for ev in touch_evr.iter() {
+        match ev.phase {
+            bevy::input::touch::TouchPhase::Started => {
+                if let Some(world_position) = camera
+                    .viewport_to_world(camera_transform, ev.position)
+                    .map(|ray| ray.origin.truncate())
+                {
+                    ev_taps.send(TapEvent(world_position));
+                }
+            }
+            _ => {}
+        }
+    }
+}
+
+fn handle_taps(
+    beakers: Query<&GlobalTransform, With<Beaker>>,
+    mut taps: EventReader<TapEvent>,
+    mut ev_spawn_pill: EventWriter<SpawnPillEvent>,
+) {
+    for tap in taps.iter() {
+        for b in beakers.iter() {
+            if b.translation().truncate().distance(tap.0) < BEAKER_CLICK_DIST {
+                let (_scale, dir, pos) = b.to_scale_rotation_translation();
+                ev_spawn_pill.send(SpawnPillEvent { pos, dir });
             }
         }
     }
