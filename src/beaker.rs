@@ -135,13 +135,24 @@ fn handle_clicks_and_touches(
         }
     }
 
-    for ev in touch_evr.iter() {
-        match ev.phase {
+    for touch in touch_evr.iter() {
+        match touch.phase {
             bevy::input::touch::TouchPhase::Started => {
-                if let Some(world_position) = camera
-                    .viewport_to_world(camera_transform, ev.position)
+                // ev_taps.send(TapEvent(touch.position));
+                info!("Tap @ {:?}", touch.position);
+                info!("Window pos: {:?}, size: {:?}", window.position, (window.width(), window.height()));
+
+                // do touches have to be translated into world position like mouse clicks?
+
+                if let Some(mut world_position) = camera
+                    .viewport_to_world(camera_transform, touch.position)
                     .map(|ray| ray.origin.truncate())
                 {
+                    info!("Tap @ world_position {:?}", world_position);
+
+                    // why is it flipped???
+                    world_position.y = -world_position.y;
+
                     ev_taps.send(TapEvent(world_position));
                 }
             }
