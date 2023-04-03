@@ -102,6 +102,7 @@ fn click_play_button(
         (&Interaction, &mut BackgroundColor),
         (Changed<Interaction>, With<Button>),
     >,
+    mut touch_evr: EventReader<TouchInput>,
 ) {
     for (interaction, mut color) in &mut interaction_query {
         match *interaction {
@@ -115,6 +116,10 @@ fn click_play_button(
                 *color = button_colors.normal.into();
             }
         }
+    }
+
+    for _ in touch_evr.iter() {
+        state.set(GameState::Playing);
     }
 }
 
