@@ -1,14 +1,17 @@
 mod audio;
+mod beaker;
 mod loading;
 mod menu;
 mod patient;
 mod pill;
 
 use crate::audio::InternalAudioPlugin;
+use crate::beaker::BeakerPlugin;
 use crate::loading::LoadingPlugin;
 use crate::menu::MenuPlugin;
 use crate::patient::PatientPlugin;
 use crate::pill::PillPlugin;
+
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy::window::Window;
@@ -43,15 +46,16 @@ impl Plugin for GamePlugin {
             .add_plugin(InternalAudioPlugin)
             .add_plugin(PatientPlugin)
             .add_plugin(PillPlugin)
+            .add_plugin(BeakerPlugin)
             // .add_plugins(DefaultPlugins)
             .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
-            .add_plugin(RapierDebugRenderPlugin::default())
             .add_startup_system(setup_physics);
         // .add_system(print_ball_altitude);
 
         #[cfg(debug_assertions)]
         {
             app.add_plugin(FrameTimeDiagnosticsPlugin::default())
+                .add_plugin(RapierDebugRenderPlugin::default()) // shows collision boxes
                 .add_plugin(LogDiagnosticsPlugin::default());
         }
     }
