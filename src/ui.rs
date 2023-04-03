@@ -34,7 +34,7 @@ fn setup_ui(mut commands: Commands, font_assets: Res<FontAssets>) {
                     color: Color::rgb(0.9, 0.9, 0.9),
                 },
             )
-            .with_text_alignment(TextAlignment::Center)
+            .with_text_alignment(TextAlignment::Left)
             .with_style(Style {
                 position_type: PositionType::Absolute,
                 position: UiRect {
@@ -45,6 +45,29 @@ fn setup_ui(mut commands: Commands, font_assets: Res<FontAssets>) {
                 ..default()
             }),
         );
+        
+    commands
+    .spawn(UiEntity)
+    .insert(
+        TextBundle::from_section(
+            "Tap the beakers to pop out pills.\nSave the patients!",
+            TextStyle {
+                font: font_assets.fira_sans.clone(),
+                font_size: 20.0,
+                color: Color::rgb(0.9, 0.9, 0.9),
+            },
+        )
+        .with_text_alignment(TextAlignment::Center)
+        .with_style(Style {
+            position_type: PositionType::Absolute,
+            position: UiRect {
+                top: Val::Px(15.0),
+                right: Val::Px(100.0),
+                ..default()
+            },
+            ..default()
+        }),
+    );
 }
 
 fn update_ui(

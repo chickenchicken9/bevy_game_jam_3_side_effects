@@ -38,41 +38,39 @@ fn spawn_beakers(
     let margin: f32 = 30.;
     let x: f32 = window.resolution.width() / 2. - margin;
     let y: f32 = window.resolution.height() / 2. - margin;
-    let _z: f32 = 1.;
+    let z: f32 = 2.;
     let r: f32 = 30.;
 
     let pos = vec![
         // Left side, bottom-to-top
-        (-x, -y, 0., -r / 2.),
-        (-x, 0., 0., -r),
-        (-x, y, 0., -r * 2.),
+        (-x, -y, z, -r / 2.),
+        (-x, 0., z, -r),
+        (-x, y, z, -r * 2.),
         // Right side, bottom-to-top
-        (x, -y, 0., r / 2.),
-        (x, 0., 0., r),
-        (x, y, 0., r * 2.),
+        (x, -y, z, r / 2.),
+        (x, 0., z, r),
+        (x, y, z, r * 2.),
     ];
 
     for pos in pos {
-        commands
-            .spawn(Beaker)
-            .insert(Interaction::Clicked)
-            .insert(SpriteBundle {
-                texture: text.clone(),
-                transform: Transform::from_xyz(pos.0, pos.1, pos.2)
-                    .with_scale(Vec3::new(BEAKER_SCALE, BEAKER_SCALE, 1.))
-                    .with_rotation(Quat::from_rotation_z((pos.3).to_radians())),
-                ..Default::default()
-            })
-            .with_children(|parent| {
-                parent.spawn(MaterialMesh2dBundle {
-                    mesh: meshes
-                        .add(shape::Circle::new(BEAKER_CLICK_DIST / BEAKER_SCALE).into())
-                        .into(),
-                    material: materials.add(ColorMaterial::from(Color::PURPLE)),
-                    // transform: Transform::from_xyz(0.0, 0.0, 0.0),
-                    ..default()
-                });
-            });
+        let mut transform = Transform::from_xyz(pos.0, pos.1, pos.2)
+            .with_scale(Vec3::new(BEAKER_SCALE, BEAKER_SCALE, 1.))
+            .with_rotation(Quat::from_rotation_z((pos.3).to_radians()));
+        commands.spawn(Beaker).insert(SpriteBundle {
+            texture: text.clone(),
+            transform,
+            ..Default::default()
+        });
+
+        transform.translation.z = 0.9;
+        commands.spawn(MaterialMesh2dBundle {
+            mesh: meshes
+                .add(shape::Circle::new(BEAKER_CLICK_DIST / BEAKER_SCALE).into())
+                .into(),
+            material: materials.add(ColorMaterial::from(Color::PURPLE)),
+            transform,
+            ..default()
+        });
     }
 }
 
