@@ -11,6 +11,11 @@ on:
         required: true
         type: string
 
+# Cancel runs in progress
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
 # ToDo: adapt names
 env:
   # heads-up: this value is used as a pattern in an sed command as a workaround for a trunk issue

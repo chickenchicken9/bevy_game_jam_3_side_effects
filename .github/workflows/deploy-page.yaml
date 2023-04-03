@@ -3,6 +3,11 @@ name: deploy-github-page
 on:
   pull_request:
   push:
+  
+# Cancel runs in progress
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
