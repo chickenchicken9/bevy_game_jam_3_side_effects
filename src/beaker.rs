@@ -7,9 +7,7 @@ use bevy::sprite::MaterialMesh2dBundle;
 use bevy::window::PrimaryWindow;
 use bevy::window::Window;
 
-use rand::distributions::{Distribution};
-
-
+use rand::distributions::Distribution;
 
 use crate::pill::SpawnPillEvent;
 

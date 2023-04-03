@@ -1,9 +1,7 @@
 use crate::loading::TextureAssets;
 use crate::GameState;
 
-
 use bevy::prelude::*;
-
 
 use bevy_rapier2d::prelude::*;
 use rand::distributions::{Distribution, Standard};
