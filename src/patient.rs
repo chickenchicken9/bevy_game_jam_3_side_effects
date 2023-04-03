@@ -1,6 +1,6 @@
 use crate::loading::TextureAssets;
 use crate::GameState;
-use bevy::input::mouse::MouseButtonInput;
+
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy::window::Window;
@@ -118,24 +118,24 @@ fn spawn_patient(
 
 fn handle_collisions(
     mut collision_events: EventReader<CollisionEvent>,
-    mut patients: Query<&Patient>,
-    mut pills: Query<&Pill>,
+    patients: Query<&Patient>,
+    pills: Query<&Pill>,
     mut commands: Commands,
     mut ev_heal_pt: EventWriter<PatientHealedEvent>,
 ) {
     for ev in collision_events.iter() {
         match ev {
-            CollisionEvent::Started(e1, e2, flags) => {
-                if let Ok(pill) = pills.get(*e1) {
-                    if let Ok(patient) = patients.get(*e2) {
+            CollisionEvent::Started(e1, e2, _flags) => {
+                if let Ok(_pill) = pills.get(*e1) {
+                    if let Ok(_patient) = patients.get(*e2) {
                         commands.entity(*e1).despawn_recursive();
                         commands.entity(*e2).despawn_recursive();
                         ev_heal_pt.send(PatientHealedEvent);
                     }
                 }
 
-                if let Ok(pill) = pills.get(*e2) {
-                    if let Ok(patient) = patients.get(*e1) {
+                if let Ok(_pill) = pills.get(*e2) {
+                    if let Ok(_patient) = patients.get(*e1) {
                         commands.entity(*e1).despawn_recursive();
                         commands.entity(*e2).despawn_recursive();
                         ev_heal_pt.send(PatientHealedEvent);
@@ -148,9 +148,9 @@ fn handle_collisions(
 }
 
 fn move_patient(
-    time: Res<Time>,
-    mut patient_query: Query<&mut Transform, With<Patient>>,
-    mut ext_forces: Query<&mut ExternalForce>,
-    mut ext_impulses: Query<&mut ExternalImpulse>,
+    _time: Res<Time>,
+    _patient_query: Query<&mut Transform, With<Patient>>,
+    _ext_forces: Query<&mut ExternalForce>,
+    _ext_impulses: Query<&mut ExternalImpulse>,
 ) {
 }

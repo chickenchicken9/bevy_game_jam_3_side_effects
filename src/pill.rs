@@ -1,10 +1,10 @@
 use crate::loading::TextureAssets;
 use crate::GameState;
-use bevy::input::mouse::MouseButtonInput;
-use bevy::math::cubic_splines::Point;
+
+
 use bevy::prelude::*;
-use bevy::window::PrimaryWindow;
-use bevy::window::Window;
+
+
 use bevy_rapier2d::prelude::*;
 use rand::distributions::{Distribution, Standard};
 use rand::RngCore;
@@ -132,10 +132,10 @@ pub fn spawn_pills(
 }
 
 fn move_pill(
-    time: Res<Time>,
-    mut pill_query: Query<&mut Transform, With<Pill>>,
-    mut ext_forces: Query<&mut ExternalForce>,
-    mut ext_impulses: Query<&mut ExternalImpulse>,
+    _time: Res<Time>,
+    _pill_query: Query<&mut Transform, With<Pill>>,
+    _ext_forces: Query<&mut ExternalForce>,
+    _ext_impulses: Query<&mut ExternalImpulse>,
 ) {
     // for mut ext_force in ext_forces.iter_mut() {
     //     ext_force.force = Vec2::new(0., 0.0);

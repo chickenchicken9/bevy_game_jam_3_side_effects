@@ -1,15 +1,15 @@
 use crate::loading::TextureAssets;
 use crate::GameState;
 use bevy::input::mouse::MouseButtonInput;
-use bevy::math::cubic_splines::Point;
+
 use bevy::prelude::*;
 use bevy::sprite::MaterialMesh2dBundle;
 use bevy::window::PrimaryWindow;
 use bevy::window::Window;
-use bevy_rapier2d::prelude::*;
-use rand::distributions::{Distribution, Standard};
-use rand::RngCore;
-use rand::{rngs::StdRng, SeedableRng};
+
+use rand::distributions::{Distribution};
+
+
 
 use crate::pill::SpawnPillEvent;
 
@@ -42,7 +42,7 @@ fn spawn_beakers(
     let margin: f32 = 30.;
     let x: f32 = window.resolution.width() / 2. - margin;
     let y: f32 = window.resolution.height() / 2. - margin;
-    let z: f32 = 1.;
+    let _z: f32 = 1.;
     let r: f32 = 30.;
 
     let pos = vec![
@@ -132,7 +132,7 @@ fn handle_beaker_touch(
                 {
                     for b in beakers.iter() {
                         if b.translation().truncate().distance(world_position) < beaker_click_dist {
-                            let (scale, dir, pos) = b.to_scale_rotation_translation();
+                            let (_scale, dir, pos) = b.to_scale_rotation_translation();
                             ev_spawn_pill.send(SpawnPillEvent { pos, dir });
                         }
                     }

@@ -1,5 +1,5 @@
 use crate::loading::FontAssets;
-use crate::loading::TextureAssets;
+
 use crate::patient::PatientHealedEvent;
 use crate::GameState;
 use bevy::prelude::*;
@@ -53,7 +53,7 @@ fn update_ui(
 ) {
     let (mut tracker, mut text) = query.single_mut();
     let mut changed = false;
-    for ev in events.iter() {
+    for _ev in events.iter() {
         tracker.saved += 1;
         changed = true;
     }
