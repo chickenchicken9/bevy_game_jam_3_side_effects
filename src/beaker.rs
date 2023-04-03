@@ -7,8 +7,6 @@ use bevy::sprite::MaterialMesh2dBundle;
 use bevy::window::PrimaryWindow;
 use bevy::window::Window;
 
-use rand::distributions::Distribution;
-
 use crate::pill::SpawnPillEvent;
 
 #[derive(Component)]
@@ -24,8 +22,8 @@ impl Plugin for BeakerPlugin {
     }
 }
 
-const beaker_scale: f32 = 0.4;
-const beaker_click_dist: f32 = 100.;
+const BEAKER_SCALE: f32 = 0.4;
+const BEAKER_CLICK_DIST: f32 = 100.;
 
 fn spawn_beakers(
     mut commands: Commands,
@@ -61,14 +59,14 @@ fn spawn_beakers(
             .insert(SpriteBundle {
                 texture: text.clone(),
                 transform: Transform::from_xyz(pos.0, pos.1, pos.2)
-                    .with_scale(Vec3::new(beaker_scale, beaker_scale, 1.))
+                    .with_scale(Vec3::new(BEAKER_SCALE, BEAKER_SCALE, 1.))
                     .with_rotation(Quat::from_rotation_z((pos.3).to_radians())),
                 ..Default::default()
             })
             .with_children(|parent| {
                 parent.spawn(MaterialMesh2dBundle {
                     mesh: meshes
-                        .add(shape::Circle::new(beaker_click_dist / beaker_scale).into())
+                        .add(shape::Circle::new(BEAKER_CLICK_DIST / BEAKER_SCALE).into())
                         .into(),
                     material: materials.add(ColorMaterial::from(Color::PURPLE)),
                     // transform: Transform::from_xyz(0.0, 0.0, 0.0),
@@ -92,7 +90,7 @@ fn handle_beaker_hover(
         .map(|ray| ray.origin.truncate())
     {
         for (transform, mut texture) in beakers.iter_mut() {
-            if transform.translation().truncate().distance(world_position) < beaker_click_dist {
+            if transform.translation().truncate().distance(world_position) < BEAKER_CLICK_DIST {
                 *texture = textures
                     .folder
                     .get("textures/beaker_hover.png")
@@ -129,7 +127,7 @@ fn handle_beaker_touch(
                     .map(|ray| ray.origin.truncate())
                 {
                     for b in beakers.iter() {
-                        if b.translation().truncate().distance(world_position) < beaker_click_dist {
+                        if b.translation().truncate().distance(world_position) < BEAKER_CLICK_DIST {
                             let (_scale, dir, pos) = b.to_scale_rotation_translation();
                             ev_spawn_pill.send(SpawnPillEvent { pos, dir });
                         }

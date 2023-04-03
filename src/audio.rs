@@ -23,7 +23,7 @@ impl Plugin for InternalAudioPlugin {
 #[derive(Resource)]
 struct FlyingAudio {
     audio: Handle<AudioInstance>,
-    timer: Timer,
+    _timer: Timer,
 }
 
 fn start_audio(mut commands: Commands, audio_assets: Res<AudioAssets>, audio: Res<Audio>) {
@@ -35,7 +35,7 @@ fn start_audio(mut commands: Commands, audio_assets: Res<AudioAssets>, audio: Re
         .handle();
     commands.insert_resource(FlyingAudio {
         audio: handle,
-        timer: Timer::new(Duration::from_secs(5), TimerMode::Once),
+        _timer: Timer::new(Duration::from_secs(5), TimerMode::Once),
     });
 }
 

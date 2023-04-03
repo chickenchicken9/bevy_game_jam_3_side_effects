@@ -46,7 +46,7 @@ fn setup_patient_spawning(mut commands: Commands) {
     })
 }
 
-const patient_scale: f32 = 0.5;
+const PATIENT_SCALE: f32 = 0.5;
 fn spawn_patient(
     mut commands: Commands,
     textures: Res<TextureAssets>,
@@ -101,7 +101,7 @@ fn spawn_patient(
                 (y_pos_sample - 0.5) * window.height(),
                 1.,
             ))
-            .with_scale(Vec3::new(patient_scale, patient_scale, 1.)),
+            .with_scale(Vec3::new(PATIENT_SCALE, PATIENT_SCALE, 1.)),
             ..Default::default()
         })
         .insert(Patient)

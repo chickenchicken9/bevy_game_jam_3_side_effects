@@ -62,7 +62,7 @@ impl Plugin for PillPlugin {
 //     }
 // }
 
-const pill_scale: f32 = 0.1;
+const PILL_SCALE: f32 = 0.1;
 
 pub fn spawn_pills(
     mut commands: Commands,
@@ -112,7 +112,7 @@ pub fn spawn_pills(
             .spawn(SpriteBundle {
                 texture: text.clone(),
                 transform: Transform::from_translation(Vec3::new(ev.pos.x, ev.pos.y, 1.))
-                    .with_scale(Vec3::new(pill_scale, pill_scale, 1.)),
+                    .with_scale(Vec3::new(PILL_SCALE, PILL_SCALE, 1.)),
                 ..Default::default()
             })
             .insert(Pill)
