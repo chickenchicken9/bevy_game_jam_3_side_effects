@@ -41,6 +41,7 @@ pub struct TextureAssets {
         paths(
             "textures/hospital.png",
             "textures/beaker.png",
+            "textures/beaker_hover.png",
             "textures/patient_0.png",
             "textures/patient_1.png",
             "textures/patient_2.png",

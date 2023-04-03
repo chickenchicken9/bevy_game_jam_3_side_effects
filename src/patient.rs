@@ -22,31 +22,7 @@ impl Plugin for PatientPlugin {
     fn build(&self, app: &mut App) {
         app.add_system(setup_patient_spawning.in_schedule(OnEnter(GameState::Playing)))
             .add_system(spawn_patient.in_set(OnUpdate(GameState::Playing)))
-            .add_system(move_patient.in_set(OnUpdate(GameState::Playing)))
-            .add_system(handle_mouse.in_set(OnUpdate(GameState::Playing)));
-    }
-}
-
-fn handle_mouse(
-    mut mousebtn_evr: EventReader<MouseButtonInput>,
-    primary_window: Query<&Window, With<PrimaryWindow>>,
-) {
-    let window = primary_window.single();
-
-    use bevy::input::ButtonState;
-
-    for ev in mousebtn_evr.iter() {
-        match ev.state {
-            ButtonState::Pressed => {
-                println!("Mouse button press: {:?}", ev.button);
-            }
-            ButtonState::Released => {
-                println!("Mouse button release: {:?}", ev.button);
-                if let Some(position) = window.cursor_position() {
-                    println!("Mouse released @ {:?}", position);
-                }
-            }
-        }
+            .add_system(move_patient.in_set(OnUpdate(GameState::Playing)));
     }
 }
 

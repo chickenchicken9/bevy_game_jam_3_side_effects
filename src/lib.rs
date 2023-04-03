@@ -54,9 +54,11 @@ impl Plugin for GamePlugin {
 
         #[cfg(debug_assertions)]
         {
-            app.add_plugin(FrameTimeDiagnosticsPlugin::default())
+            app
+            // .add_plugin(FrameTimeDiagnosticsPlugin::default())
                 .add_plugin(RapierDebugRenderPlugin::default()) // shows collision boxes
-                .add_plugin(LogDiagnosticsPlugin::default());
+                // .add_plugin(LogDiagnosticsPlugin::default())
+                ;
         }
     }
 }
